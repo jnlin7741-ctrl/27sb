@@ -224,7 +224,7 @@ a,button,.bgm,.top a,.foot a{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http
   document.getElementById('kicker').textContent=isFS?('封神榜 · 第 '+id+' 位'):((h.g==='t'?'天罡九星':'地煞十八星')+' · 第 '+id+' 位');
   document.getElementById('name').textContent=h.n;
   const nk=document.getElementById('nick');
-  if(isFS){nk.style.display='none';}
+  if(isFS){nk.textContent=h.nick;}
   else{nk.textContent='称号 · '+h.nick;}
   const jt=document.getElementById('joinTag');
   if(isFS){jt.textContent='斩将者 · '+h.by;}
