@@ -274,9 +274,9 @@ a,button,.bgm,.top a,.foot a{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http
     KEYS.forEach(k=>{const x=rnd();if(x<.24)v[k]=Math.min(MAX,v[k]+1);else if(x<.5)v[k]=Math.max(1,v[k]-1)});
     if(OV[h.n])for(const k in OV[h.n])v[k]=G.indexOf(OV[h.n][k])+1;
     const L={};KEYS.forEach(k=>L[k]=G[v[k]-1]);
-    /* 总评：加权平均后拉大差距（除以 16 后再开方映射） */
+    /* 总评：16 维平均值四舍五入取对应等级 */
     const avg=KEYS.reduce((a,k)=>a+v[k],0)/16;
-    const tot=G[Math.max(0,Math.min(MAX-1,Math.round((avg-1)*2)))];
+    const tot=G[Math.max(0,Math.min(MAX-1,Math.round(avg)-1))];
 
     const cx=160,cy=124,RL=102,RT=82,R=68,RV=g=>g*R/MAX;
     const rad=i=>(90-i*22.5)*Math.PI/180;
