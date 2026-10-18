@@ -200,29 +200,43 @@ a,button,.bgm,.top a,.foot a{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http
 </div>
 
 <script src="data.js"></script>
+<script src="data_fs.js"></script>
 <script src="music.js?v=20261018a"></script>
 <script>
 (function(){
-  const P=window.PORTRAIT,HS=window.HEROES,FT=window.FATE;
   const q=new URLSearchParams(location.search);
-  let id=parseInt(q.get('id')||'1',10);
+  const isFS=q.has('fs');
+  const HS=isFS?(window.FS||[]):window.HEROES;
+  const FT=window.FATE;
+  const P=isFS?window.PORTRAIT_FS:window.PORTRAIT;
+  let id=parseInt(q.get(isFS?'fs':'id')||'1',10);
   const N=HS.length;
   if(!(id>=1&&id<=N))id=1;
   const i=id-1,h=HS[i],pad=String(id).padStart(3,'0');
+  const PAGE=isFS?'story.html?fs=':'story.html?id=';
 
-  document.title=h.n+' · 纱布传 · 人物页';
+  document.title=h.n+(isFS?' · 封神榜 · 纱布传':' · 纱布传 · 人物页');
   const art=document.getElementById('artImg');
-  art.src=P(i);art.alt='纱布画像 · '+h.n;
+  art.src=P(i);art.alt=(isFS?'封神榜画像 · ':'纱布画像 · ')+h.n;
   document.getElementById('s1').textContent=h.x;
-  document.getElementById('s2').textContent=h.nick;
+  document.getElementById('s2').textContent=isFS?'封神榜':h.nick;
   document.getElementById('s3').textContent=h.n;
-  document.getElementById('kicker').textContent=(h.g==='t'?'天罡九星':'地煞十八星')+' · 第 '+id+' 位';
+  document.getElementById('kicker').textContent=isFS?('封神榜 · 第 '+id+' 位'):((h.g==='t'?'天罡九星':'地煞十八星')+' · 第 '+id+' 位');
   document.getElementById('name').textContent=h.n;
   document.getElementById('nick').textContent='称号 · '+h.nick;
-  document.getElementById('joinTag').textContent='入伙 · '+(h.join||'不详');
+  const jt=document.getElementById('joinTag');
+  if(isFS){jt.textContent='斩将者 · '+h.by;}
+  else{jt.textContent='入伙 · '+(h.join||'不详');}
   const ft=document.getElementById('fate');
-  ft.className='fate fate-'+h.f;ft.textContent=FT[h.f];
-  document.getElementById('bio').textContent=h.s;
+  if(isFS){ft.className='fate fate-1';ft.textContent='殁于阵前 · 已入封神榜';}
+  else{ft.className='fate fate-'+h.f;ft.textContent=FT[h.f];}
+  const bio=document.getElementById('bio');
+  if(isFS){
+    bio.parentNode.innerHTML=h.s.split(/\n+/).map(t=>'<p>'+t+'</p>').join('');
+    document.querySelector('h2.h').innerHTML='阵亡始末';
+  }else{
+    bio.textContent=h.s;
+  }
 
   /* ===== 纱布评鉴 · 十六则（十六维雷达，数值按座次/称号/种子生成，人各一套） ===== */
   (function(){
@@ -247,7 +261,8 @@ a,button,.bgm,.top a,.foot a{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http
       '林建辉':{lg:'A+',dge:'A+',awe:'A',grp:'A',iq:'A',spd:'B+',duo:'B+',pow:'B',def:'B',dur:'B',rng:'B',wpn:'B',exp:'B',env:'B',gro:'B',wil:'B'},
       '肖祝捷':{iq:'A+',exp:'A+',gro:'A',lg:'A',wil:'A',spd:'B',dge:'B',pow:'B',def:'B',dur:'B',grp:'B',duo:'B',rng:'B',wpn:'B',env:'B',awe:'B'},
       '董毅':{iq:'A+',duo:'A+',grp:'A',pow:'A',lg:'A',exp:'A',spd:'B',dge:'B',def:'B',dur:'B',rng:'B',wpn:'B',env:'B',gro:'B',awe:'B',wil:'B'},
-      '黄祚京':{iq:'A+',exp:'A+',gro:'A+',lg:'A',wil:'A',spd:'B',dge:'B',pow:'B',def:'B',dur:'B',grp:'B',duo:'B',rng:'B',wpn:'B',env:'B',awe:'B'}
+      '黄祚京':{iq:'A+',exp:'A+',gro:'A+',lg:'A',wil:'A',spd:'B',dge:'B',pow:'B',def:'B',dur:'B',grp:'B',duo:'B',rng:'B',wpn:'B',env:'B',awe:'B'},
+      '曾志强':{env:'S+',dge:'S+',iq:'A+',exp:'A',lg:'A',awe:'A',spd:'B+',pow:'B',def:'B',dur:'B',grp:'B',duo:'B',rng:'B',wpn:'B',gro:'B',wil:'B'}
     };
     /* 称号推演：见字加分 */
     const BOOST=[
@@ -267,9 +282,9 @@ a,button,.bgm,.top a,.foot a{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http
       [/劳模|毕业|元老/,'exp']
     ];
     function rng32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-    const tag=h.n+h.nick, rnd=rng32(id*7349+1013), v={};
-    /* 基础值按种子随机均匀分布在 3~11，不按座次，让总评自然铺满 F~S+ */
-    const base=Math.floor(rnd()*9)+3;
+    const tag=h.n+h.nick, rnd=rng32(id*7349+(isFS?9107:1013)), v={};
+    /* 基础值按种子随机均匀分布，不按座次，让总评自然铺满 F~S+；敌将甚是难缠，底子略高 */
+    const base=isFS?Math.floor(rnd()*7)+5:Math.floor(rnd()*9)+3;
     v.lg=base;
     KEYS.slice(1).forEach(k=>v[k]=base);
     BOOST.forEach(b=>{if(b[0].test(tag))v[b[1]]=Math.min(MAX,v[b[1]]+1)});
@@ -306,21 +321,23 @@ a,button,.bgm,.top a,.foot a{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http
   })();
 
   /* 按来路返回 */
-  const FROM=({gallery:['gallery.html','名绘']})[q.get('from')||''];
+  const FROM=({gallery:['gallery.html','名绘'],fengshen:['gallery.html#fengshen','封神榜']})[q.get('from')||''];
   if(FROM){
     const bf=document.getElementById('backFrom');
     bf.href=FROM[0]; bf.textContent='← 回 '+FROM[1]; bf.hidden=false;
   }
   const fromQ=q.get('from')?'&from='+encodeURIComponent(q.get('from')):'';
+  if(isFS)document.querySelector('.brand small').textContent='封神榜 · 十五大将';
+  if(isFS){const gb=document.querySelector('.backlinks a[href="gallery.html"]');if(gb){gb.href='gallery.html#fengshen';gb.textContent='← 回到封神榜';}}
 
   /* 上一位 / 下一位 */
   const prev=(i+N-1)%N+1, next=(i+1)%N+1;
-  ['prevLink','prevLink2'].forEach(k=>document.getElementById(k).href='story.html?id='+prev+fromQ);
-  ['nextLink','nextLink2'].forEach(k=>document.getElementById(k).href='story.html?id='+next+fromQ);
+  ['prevLink','prevLink2'].forEach(k=>document.getElementById(k).href=PAGE+prev+fromQ);
+  ['nextLink','nextLink2'].forEach(k=>document.getElementById(k).href=PAGE+next+fromQ);
   document.getElementById('pager').textContent=pad+' / '+N+' · '+HS[prev-1].n+' ‹ › '+HS[next-1].n;
   addEventListener('keydown',e=>{
-    if(e.key==='ArrowLeft')location.href='story.html?id='+prev+fromQ;
-    if(e.key==='ArrowRight')location.href='story.html?id='+next+fromQ;
+    if(e.key==='ArrowLeft')location.href=PAGE+prev+fromQ;
+    if(e.key==='ArrowRight')location.href=PAGE+next+fromQ;
   });
 })();
 </script>
