@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>纱布群中势力范围 · 纱布传</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet">
 <style>
 :root{--cinn:#d1452b}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -22,55 +22,32 @@ a{color:inherit;text-decoration:none}
 .tb-links a{padding:7px 16px;font-size:16px;color:#d8d4c8;border:1px solid rgba(255,255,255,.22);border-radius:999px;transition:.3s}
 .tb-links a:hover{color:#fff;border-color:#fff;background:rgba(255,255,255,.08)}
 
-.wrap{max-width:1280px;margin:0 auto;padding:86px 20px 40px}
+.wrap{max-width:920px;margin:0 auto;padding:86px 16px 40px}
 .hint{text-align:center;font-size:14px;color:#8f959c;letter-spacing:.12em;margin:4px 0 18px}
 .hint b{color:#e8ca7d;font-weight:600}
 .hint b.fall{color:var(--cinn)}
 
 .map-frame{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:#131417;
-  box-shadow:0 24px 80px rgba(0,0,0,.7);padding:8px;overflow:hidden}
+  box-shadow:0 24px 80px rgba(0,0,0,.7);padding:6px;overflow:hidden}
 svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
 
-/* 板块 */
-.rg{cursor:pointer}
-.rg .shape{transition:filter .3s}
-.rg:hover .shape{filter:brightness(1.22) saturate(1.12)}
-.rg-fall{cursor:pointer}
-.rg-fall .shape{transition:filter .3s}
-.rg-fall:hover .shape{filter:brightness(2)}
-.rname{font-family:'Noto Serif SC',serif;font-weight:900;fill:#f5f2e8;text-anchor:middle;pointer-events:none;
-  letter-spacing:6px;paint-order:stroke;stroke:rgba(0,0,0,.4);stroke-width:1px}
-.fname{font-family:'Noto Serif SC',serif;font-weight:900;fill:#f2efe6;text-anchor:middle;pointer-events:none;letter-spacing:3px}
-.fsub{font-family:'Noto Serif SC',serif;fill:#c3c8cf;text-anchor:middle;pointer-events:none;letter-spacing:2px}
-.crack{fill:none;stroke:#ffffff;stroke-opacity:.14;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-.icon{stroke:#fff;stroke-opacity:.5;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-.icon-f{fill:#fff;fill-opacity:.5;stroke:none;pointer-events:none}
-
-/* 百分比小牌 */
-.pchip{cursor:pointer}
-.pchip rect{fill:rgba(8,9,11,.8);stroke:rgba(255,255,255,.16);stroke-width:1}
-.pchip text{font-family:'Noto Serif SC',serif;font-size:13.5px;fill:#dcd8cd;letter-spacing:1px}
-.pchip:hover rect{stroke:rgba(255,255,255,.5)}
-
-/* 左侧图例 */
-.leg{cursor:pointer}
-.leg text{font-family:'Noto Serif SC',serif;font-size:15px;fill:#e8e4da;letter-spacing:1px}
-.leg .pct{fill:#9aa0a6;font-size:13px}
-.leg:hover text{fill:#fff}
-.leg .sw{stroke:rgba(255,255,255,.35);stroke-width:1}
+/* 透明热区 */
+.hit{fill:rgba(0,0,0,0);stroke:transparent;stroke-width:1.5;cursor:pointer;transition:fill .25s,stroke .25s}
+.hit:hover{fill:rgba(255,255,255,.10);stroke:rgba(255,255,255,.65)}
+.hit.active{stroke:rgba(255,255,255,.9);stroke-width:2;fill:rgba(255,255,255,.06)}
 
 /* 头像与连线 */
-.cl-line{stroke-width:1.8;stroke-dasharray:5 4;opacity:0;transition:opacity .5s .05s}
-.cl-line.on{opacity:.9}
-.av{opacity:0;transform:translateY(14px);transition:opacity .45s,transform .45s;pointer-events:none}
+.cl-line{stroke-width:1.6;stroke-dasharray:4 4;opacity:0;transition:opacity .5s .05s;pointer-events:none}
+.cl-line.on{opacity:.95}
+.av{opacity:0;transform:translateY(12px);transition:opacity .45s,transform .45s;pointer-events:none}
 .av.on{opacity:1;transform:translateY(0);pointer-events:auto}
 .av a{cursor:pointer}
-.av-back{fill:#0c0d10;stroke-width:2.6;transition:filter .3s}
-.av a:hover .av-back{filter:drop-shadow(0 0 9px rgba(255,255,255,.75)) drop-shadow(0 0 3px rgba(255,255,255,.5))}
-.av-name{font-family:'Noto Serif SC',serif;font-size:13.5px;fill:#efece2;text-anchor:middle;letter-spacing:1px;
-  paint-order:stroke;stroke:rgba(0,0,0,.75);stroke-width:2.5px;font-weight:600}
-.av-tag{font-family:'Noto Serif SC',serif;font-size:10.5px;fill:#ffb9a8;text-anchor:middle;letter-spacing:1px}
-.av-tag-box{fill:rgba(176,42,30,.4);stroke:var(--cinn);stroke-width:1}
+.av-back{fill:#0c0d10;stroke-width:2.4;transition:filter .3s}
+.av a:hover .av-back{filter:drop-shadow(0 0 9px rgba(255,255,255,.8)) drop-shadow(0 0 3px rgba(255,255,255,.5))}
+.av-name{font-family:'Noto Serif SC',serif;font-size:12.5px;fill:#f2efe6;text-anchor:middle;letter-spacing:1px;
+  paint-order:stroke;stroke:rgba(0,0,0,.8);stroke-width:2.4px;font-weight:600}
+.av-tag{font-family:'Noto Serif SC',serif;font-size:9px;fill:#ffb9a8;text-anchor:middle;letter-spacing:1px}
+.av-tag-box{fill:rgba(176,42,30,.45);stroke:var(--cinn);stroke-width:.8}
 .av-virt{cursor:default}
 .virt-glyph{font-family:'Ma Shan Zheng';fill:#c9ccd1;text-anchor:middle}
 
@@ -95,45 +72,12 @@ svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
 </header>
 
 <div class="wrap">
-  <p class="hint">点按<b>各势力板块</b>（或左侧图例），本部人物即现身近旁并与板块连线；点<b>头像</b>翻阅其传。<b class="fall">黑色沦陷之地</b>另有其人。</p>
+  <p class="hint">点按<b>各势力板块</b>，本部人物即现身近旁并与板块连线；点<b>头像</b>翻阅其传。<b class="fall">黑色沦陷之地</b>另有其人。</p>
 
   <div class="map-frame">
-  <svg id="map" viewBox="0 0 1200 990" role="img" aria-label="纱布群中势力范围">
-    <defs>
-      <radialGradient id="bgG" cx="50%" cy="40%" r="85%">
-        <stop offset="0%" stop-color="#2c2e33"/><stop offset="60%" stop-color="#212226"/><stop offset="100%" stop-color="#141518"/>
-      </radialGradient>
-      <radialGradient id="vig" cx="50%" cy="45%" r="75%">
-        <stop offset="62%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,.55)"/>
-      </radialGradient>
-      <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .05 0"/></filter>
-      <filter id="shGlow" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity=".45"/>
-      </filter>
-      <filter id="lblShadow" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity=".8"/>
-      </filter>
-    </defs>
-
-    <!-- 底：暗色岩面 -->
-    <rect width="1200" height="990" fill="url(#bgG)"/>
-    <rect width="1200" height="990" filter="url(#grain)"/>
-    <rect width="1200" height="990" fill="url(#vig)"/>
-
-    <!-- 题名 -->
-    <text x="600" y="58" text-anchor="middle" fill="#f2efe6" font-family="'Noto Serif SC',serif" font-weight="900"
-      font-size="40" letter-spacing="12px" filter="url(#lblShadow)">纱布群中势力范围</text>
-    <text x="600" y="86" text-anchor="middle" fill="#7f858c" font-size="12" letter-spacing="7px">SHABUQUN ZHONG SHILI FANWEI</text>
-
-    <!-- 指北针 -->
-    <g transform="translate(1108,60)" opacity=".85">
-      <path d="M0,-26 L5,-5 L26,0 L5,5 L0,26 L-5,5 L-26,0 L-5,-5 Z" fill="#878c93" opacity=".9"/>
-      <circle r="2.8" fill="#141518"/>
-      <text y="-34" text-anchor="middle" fill="#aeb3ba" font-size="14" font-weight="700">N</text>
-    </g>
-
-    <g id="gRegions"></g>
+  <svg id="map" viewBox="0 0 512 560" role="img" aria-label="纱布群中势力范围">
+    <image href="images/map_ref.webp" x="0" y="0" width="512" height="560" preserveAspectRatio="xMidYMid slice"/>
+    <g id="gHits"></g>
     <g id="gLines"></g>
     <g id="gAvatars"></g>
   </svg>
@@ -142,215 +86,97 @@ svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
 
 <div class="foot">纱布传 · 势力范围一览</div>
 
-<script src="music.js?v=20261020a"></script>
+<script src="music.js?v=20261020b"></script>
 <script>
 (function(){
   const NS='http://www.w3.org/2000/svg';
   const el=(t,at,parent)=>{const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);if(parent)parent.appendChild(e);return e;};
   const pad3=i=>String(i).padStart(3,'0');
-  const rng=seed=>{let s=seed>>>0;return()=>((s=(s*1664525+1013904223)>>>0)/4294967296);};
+  const poly=pts=>pts.map(p=>p.join(',')).join(' ');
 
-  /* 折线加密抖动：相邻板块共用同一条链，边界天然接壤 */
-  function wig(pts,amp,seed,seg){
-    seg=seg||3;
-    const r=rng(seed),out=[];
-    for(let i=0;i<pts.length-1;i++){
-      const p=pts[i],q=pts[i+1];
-      out.push(p);
-      const dx=q[0]-p[0],dy=q[1]-p[1],L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
-      for(let s=1;s<=seg;s++){
-        const t=s/(seg+1),a=(r()*2-1)*amp;
-        out.push([p[0]+dx*t+nx*a,p[1]+dy*t+ny*a]);
-      }
-    }
-    out.push(pts[pts.length-1]);
-    return out;
-  }
-  const rev=pts=>pts.slice().reverse();
-  const join=chains=>{                 /* 首尾相接拼合多边形 */
-    const out=[];
-    chains.forEach(c=>{c.forEach((p,i)=>{if(i===0&&out.length&&Math.hypot(out[out.length-1][0]-p[0],out[out.length-1][1]-p[1])<.5)return;out.push(p);});});
-    return out;
-  };
-  const pathOf=pts=>'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ')+' Z';
-
-  /* ===== 边界网：相邻板块共用同一链条 ===== */
-  const B={
-    oTop:[[210,150],[420,118],[640,110]],
-    oNE: [[640,110],[870,112],[1090,145]],
-    oE:  [[1090,145],[1145,270],[1150,400],[1120,520]],
-    oSE: [[1120,520],[1150,660],[1105,780],[1090,900]],
-    oB2: [[1090,900],[940,900]],
-    oB1: [[940,900],[760,905],[560,900]],
-    oB0: [[560,900],[400,908],[240,900]],
-    oW2: [[240,900],[195,770],[180,640]],
-    oW1: [[180,640],[185,530],[206,436]],
-    oW0: [[206,436],[195,290],[210,150]],
-    br:  [[640,110],[618,190],[668,265],[636,340],[676,420],[648,470],[680,500]],
-    rp:  [[680,500],[740,540],[806,522],[868,556],[936,534],[1006,560],[1064,540],[1120,520]],
-    bp:  [[680,500],[704,556],[688,606],[706,652]],
-    bo:  [[560,610],[608,626],[652,640],[706,652]],
-    bg:  [[206,436],[262,486],[330,472],[400,528],[470,548],[528,578],[560,610]],
-    po:  [[706,652],[768,690],[836,706],[890,722],[940,742]],
-    pg:  [[940,742],[1002,700],[1062,640],[1120,520]],
-    go:  [[560,610],[556,700],[566,800],[560,900]],
-    og:  [[940,742],[938,800],[944,850],[940,900]]
-  };
-  const W={};  /* 抖动后的链（每链只算一次，两侧共用） */
-  for(const k in B)W[k]=wig(B[k],9,k.length*97+k.charCodeAt(0)*13);
-
-  /* ===== 势力板块 ===== */
+  /* ===== 势力热区（坐标基于原图 512×560） ===== */
   const REG=[
-   {k:'dq',n:'电气院',pct:'41.4%',c:'#4d7fae',cd:'#26486b',
-    poly:join([W.oTop,W.br,W.bp,rev(W.bo),rev(W.bg),rev(W.oW1),W.oW0]),
-    lbl:[505,478,40],a:[500,430],hub:[500,270],cols:4,cb:[230,170,640,560],
-    icons:[['bolt',490,180,1.4],['bolt',600,260,1.3],['bolt',245,425,1.2],['bolt',545,552,1.2],
-           ['mount',350,428,1.3],['mount',620,420,1.2]],
+   {k:'dq',n:'电气院',c:'#4d7fae',
+    hit:[[70,125],[160,92],[255,100],[320,145],[335,235],[315,330],[255,392],[165,398],[90,355],[52,270],[48,180]],
+    a:[200,320],hub:[200,240],cols:4,SP:55,
     m:[['陈璇',4],['曾志强',5],['刘正文',6],['朱宇辰',7],['吕科榕',12],['徐嘉伟',15],['涂宏宸',18],['钟俊文',19],['叶凯斌',20],['董毅',21],['余宣亮',23]]},
-   {k:'jd',n:'机电院',pct:'24.1%',c:'#a03a40',cd:'#641f24',
-    poly:join([W.oNE,W.oE,rev(W.rp),rev(W.br)]),
-    lbl:[860,490,34],a:[850,455],hub:[845,335],cols:3,cb:[700,170,1090,470],
-    icons:[['gear',760,300,1.3],['gear',800,430,1.2],['gear',1000,320,1.4],['gear',1060,420,1.2],['gear',740,200,1]],
+   {k:'jd',n:'机电院',c:'#a03a40',
+    hit:[[320,150],[380,115],[450,125],[488,180],[490,260],[455,320],[390,338],[330,300],[310,230]],
+    a:[385,300],hub:[385,240],cols:3,SP:55,
     m:[['许醇杰',1],['林建辉',9],['杨建勇',10],['刘舒帆',14],['解勇',17],['高宇轩',24],['梁克楠',25]]},
-   {k:'xy',n:'信院',pct:'10.3%',c:'#7d5fa6',cd:'#4c3770',
-    poly:join([W.rp,W.pg,rev(W.po),rev(W.bp)]),
-    lbl:[905,690,30],a:[900,655],hub:[900,600],cols:3,cb:[720,540,1080,720],
-    icons:[['wifi',840,570,1.2],['wifi',960,690,1.4],['wifi',1050,600,1.1]],
-    m:[['陈昭康',2],['黄伟明',8],['肖祝捷',16]]},
-   {k:'nc',n:'南昌',pct:'13.8%',c:'#d2a944',cd:'#8a6c20',
-    poly:join([W.bg,W.go,W.oB0,W.oW2,W.oW1]),
-    lbl:[340,738,34],a:[340,700],hub:[340,655],cols:2,cb:[210,480,540,850],
-    icons:[['pagoda',255,695,1.3],['pagoda',420,685,1.1],['pagoda',470,790,1.2],['pagoda',230,790,1]],
+   {k:'nc',n:'南昌',c:'#d2a944',
+    hit:[[110,390],[175,368],[245,385],[275,430],[262,480],[200,505],[135,495],[100,450]],
+    a:[190,460],hub:[190,435],cols:2,SP:56,
     m:[['温伟斌',3],['黄祚京',27]]},
-   {k:'fx',n:'法学院',pct:'6.9%',c:'#97a153',cd:'#5f6a2e',
-    poly:join([W.bo,W.po,W.og,W.oB1,rev(W.go)]),
-    lbl:[735,828,26],a:[735,805],hub:[720,760],cols:2,cb:[590,650,910,870],
-    icons:[['scales',620,790,1.3],['scales',800,840,1.1]],
+   {k:'xy',n:'信院',c:'#7d5fa6',
+    hit:[[330,340],[390,325],[450,340],[462,395],[440,435],[380,442],[332,412],[322,370]],
+    a:[395,410],hub:[395,375],cols:3,SP:48,
+    m:[['陈昭康',2],['黄伟明',8],['肖祝捷',16]]},
+   {k:'fx',n:'法学院',c:'#97a153',
+    hit:[[280,440],[340,428],[390,445],[398,495],[360,530],[300,532],[272,495]],
+    a:[330,505],hub:[330,478],cols:2,SP:54,
     m:[['贺书文',13],['应奇都',26]]},
-   {k:'tc',n:'土测院',pct:'3.4%',c:'#8f8f88',cd:'#565650',
-    poly:join([rev(W.pg),W.oSE,W.oB2,rev(W.og)]),
-    lbl:[1012,832,22],a:[1008,815],hub:[1005,765],cols:1,cb:[960,590,1120,860],
-    icons:[['pick',1080,760,1.3],['pick',970,840,1.1]],
+   {k:'tc',n:'土测院',c:'#8f8f88',
+    hit:[[390,455],[440,442],[472,470],[470,520],[430,540],[392,522],[382,485]],
+    a:[425,508],hub:[425,482],cols:1,
     m:[['代小川',11]]},
-   /* —— 沦陷之地（黑色补丁，单独板块） —— */
-   {k:'fq_dq',n:'沦陷',sub:'电气院沦陷区 · 黄雨洋踞此',fall:1,c:'#101113',cd:'#000000',line:'#c9433a',
-    poly:wig([[218,250],[286,224],[344,252],[362,318],[336,384],[262,398],[216,348]],13,911,3),closed:1,
-    lbl:[289,378,16],sub_p:[289,420],a:[289,355],hub:[289,300],cols:1,
+   /* —— 沦陷之地 —— */
+   {k:'fq_dq',n:'电气院沦陷区',fall:1,c:'#c9433a',
+    hit:[[46,172],[96,160],[124,186],[119,224],[80,240],[48,216]],
+    a:[85,238],hub:[62,295],cols:1,
     m:[{n:'黄雨洋',i:22}]},
-   {k:'fq_jd',n:'沦陷',sub:'机电院沦陷区 · 朱镇踞此',fall:1,c:'#101113',cd:'#000000',line:'#c9433a',
-    poly:wig([[880,160],[940,130],[1020,140],[1058,196],[1020,248],[940,244],[890,206]],13,923,3),closed:1,
-    lbl:[955,232,16],sub_p:[955,268],a:[955,225],hub:[955,168],cols:1,
+   {k:'fq_jd',n:'机电院沦陷区',fall:1,c:'#c9433a',
+    hit:[[424,130],[470,120],[502,144],[500,182],[462,198],[427,180]],
+    a:[464,196],hub:[478,242],cols:1,
     m:[{n:'朱镇',fs:1}]},
-   {k:'fq_nc',n:'沦陷',sub:'南昌沦陷区 · 张钧朝踞此',fall:1,c:'#101113',cd:'#000000',line:'#c9433a',
-    poly:wig([[248,790],[320,758],[400,776],[432,832],[388,878],[300,872],[246,838]],13,937,3),closed:1,
-    lbl:[330,858,16],sub_p:[330,895],a:[330,850],hub:[330,795],cols:1,
+   {k:'fq_nc',n:'南昌沦陷区',fall:1,c:'#c9433a',
+    hit:[[124,484],[176,468],[216,487],[213,526],[175,546],[131,533]],
+    a:[196,520],hub:[262,505],cols:1,
     m:[{n:'张钧朝',v:1}]}
   ];
 
-  const gR=document.getElementById('gRegions'),gL=document.getElementById('gLines'),gA=document.getElementById('gAvatars');
+  const gH=document.getElementById('gHits'),gL=document.getElementById('gLines'),gA=document.getElementById('gAvatars');
   let active=null;
 
-  /* 小图标 */
-  const ICONS={
-    bolt:g=>el('path',{d:'M2 0 L8.5 0 L4.8 6.5 L9.5 6.5 L1 16 L4 8.5 L0 8.5 Z',class:'icon-f'},g),
-    gear:g=>{el('circle',{r:4.6},g);el('circle',{r:1.6},g);for(let i=0;i<8;i++){const a=i*Math.PI/4;el('line',{x1:Math.cos(a)*5.6,y1:Math.sin(a)*5.6,x2:Math.cos(a)*8,y2:Math.sin(a)*8},g);}},
-    wifi:g=>{el('path',{d:'M-8 0 A 11 11 0 0 1 8 0'},g);el('path',{d:'M-4.6 3.4 A 6.4 6.4 0 0 1 4.6 3.4'},g);el('circle',{cy:7,r:1.7,class:'icon-f'},g);},
-    pagoda:g=>el('path',{d:'M-8 0 H8 M-6 0 V-2 H6 V0 M-9 -2 L0 -8 L9 -2 M-5.5 -8 H5.5 M-7 -8 L0 -13 L7 -8 M-1.4 -13 V-16 H1.4 V-13'},g),
-    scales:g=>el('path',{d:'M0 3 V-9 M-6.5 -6.5 H6.5 M-6.5 -6.5 L-9.5 0 M-6.5 -6.5 L-3.5 0 M-9.5 0 A3 3 0 0 0 -3.5 0 M6.5 -6.5 L3.5 0 M6.5 -6.5 L9.5 0 M9.5 0 A3 3 0 0 1 3.5 0 M-4 3 H4'},g),
-    pick:g=>el('path',{d:'M-8 -3 Q0 -9 8 -3 M0 -5.5 V8'},g),
-    mount:g=>el('path',{d:'M-9 4 L-2 -6 L2 0 L5 -4 L10 4 Z'},g)
-  };
-  function iconDraw(ic,parent){
-    const g=el('g',{transform:`translate(${ic[1]},${ic[2]}) scale(${ic[3]||1})`,class:'icon'},parent);
-    (ICONS[ic[0]]||(()=>{}))(g);
-  }
-
-  /* 板块 */
+  /* 热区 */
   REG.forEach(r=>{
-    const fall=!!r.fall;
-    const g=el('g',{class:fall?'rg-fall':'rg'},gR);
-    el('path',{class:'shape',d:pathOf(r.poly),fill:r.c,stroke:r.cd,'stroke-width':fall?2:2.5,
-      'stroke-linejoin':'round',filter:'url(#shGlow)'},g);
-    /* 白色裂纹 */
-    const rr=rng((r.seed||r.k.length*31)*7+3),bb=r.cb;
-    for(let i=0;i<2;i++){
-      let x=bb[0]+rr()*(bb[2]-bb[0]),y=bb[1]+rr()*(bb[3]-bb[1]);
-      let d='M'+x.toFixed(0)+' '+y.toFixed(0);
-      for(let s=0;s<4;s++){x+=(rr()*2-1)*50;y+=(rr()*2-1)*38;d+=' L'+x.toFixed(0)+' '+y.toFixed(0);}
-      el('path',{class:'crack',d,strokeOpacity:fall?.22:.14},g);
-    }
-    if(fall){
-      el('text',{class:'fname',x:r.lbl[0],y:r.lbl[1],'font-size':r.lbl[2],filter:'url(#lblShadow)'},g).textContent='沦陷 ✕';
-      el('text',{class:'fsub',x:r.sub_p[0],y:r.sub_p[1],'font-size':11},g).textContent=r.sub;
-    }else{
-      (r.icons||[]).forEach(ic=>iconDraw(ic,g));
-      el('text',{class:'rname',x:r.lbl[0],y:r.lbl[1],'font-size':r.lbl[2],filter:'url(#lblShadow)'},g).textContent=r.n;
-    }
-    g.addEventListener('click',()=>toggle(r));
+    r._hitEl=el('polygon',{class:'hit',points:poly(r.hit)},gH);
+    r._hitEl.addEventListener('click',()=>toggle(r));
   });
-
-  /* 左侧图例 + 百分比小牌 */
-  const ORD=['dq','jd','nc','xy','fx','tc'];
-  const legG=el('g',{},document.getElementById('map'));
-  el('line',{x1:44,y1:172,x2:44,y2:334,stroke:'rgba(255,255,255,.18)','stroke-width':1.2},legG);
-  ORD.forEach((k,i)=>{
-    const r=REG.find(q=>q.k===k);
-    const y=164+i*32;
-    const row=el('g',{class:'leg'},legG);
-    el('rect',{x:56,y:y-11,width:14,height:14,fill:r.c,stroke:'rgba(255,255,255,.35)','stroke-width':1},row);
-    el('text',{x:80,y:y+2},row).textContent=r.n;
-    el('text',{x:186,y:y+2,class:'pct','text-anchor':'end'},row).textContent=r.pct;
-    el('rect',{x:50,y:y-15,width:144,height:24,fill:'transparent'},row);
-    row.addEventListener('click',()=>toggle(r));
-  });
-  /* 图例下方盾徽 */
-  const sh=el('g',{transform:'translate(64,402)',opacity:.75},legG);
-  el('path',{d:'M0 -18 C11 -13 16 -9 16 0 C16 11 7 18 0 23 C-7 18 -16 11 -16 0 C-16 -9 -11 -13 0 -18 Z',
-    fill:'none',stroke:'#8a8f96','stroke-width':2},sh);
-  el('path',{d:'M2 -10 L-5 1 L-0.5 1 L-2 10 L5 -2 L0.5 -2 Z',fill:'#8a8f96'},sh);
-  /* 百分比小牌 */
-  const CHIPS={'dq':[36,112],'jd':[700,80],'nc':[36,448],'xy':[1002,505],'fx':[500,928],'tc':[988,926]};
-  for(const k in CHIPS){
-    const r=REG.find(q=>q.k===k),p=CHIPS[k];
-    const cp=el('g',{class:'pchip'},legG);
-    el('rect',{x:p[0],y:p[1],width:148,height:26,rx:6},cp);
-    el('rect',{x:p[0]+9,y:p[1]+7,width:12,height:12,fill:r.c},cp);
-    el('text',{x:p[0]+28,y:p[1]+18},cp).textContent=r.n+' '+r.pct;
-    cp.addEventListener('click',()=>toggle(r));
-  }
 
   /* 头像群 */
   REG.forEach(r=>{
-    const fall=!!r.fall,lineC=r.line||r.c;
-    const n=r.m.length,cols=Math.min(r.cols||4,n),rows=Math.ceil(n/cols),SP=70;
+    const fall=!!r.fall;
+    const n=r.m.length,cols=Math.min(r.cols||4,n),rows=Math.ceil(n/cols),SP=r.SP||55;
     const lineEls=[],avEls=[];
     r.m.forEach((m0,idx)=>{
       const mm=Array.isArray(m0)?{n:m0[0],i:m0[1]}:m0;
       const ci=idx%cols,ri=Math.floor(idx/cols);
       const x=r.hub[0]+(ci-(cols-1)/2)*SP, y=r.hub[1]+(ri-(rows-1)/2)*SP;
-      lineEls.push(el('line',{class:'cl-line',stroke:lineC,x1:r.a[0],y1:r.a[1],x2:x,y2:y-4},gL));
+      lineEls.push(el('line',{class:'cl-line',stroke:r.c,x1:r.a[0],y1:r.a[1],x2:x,y2:y-4},gL));
 
       const av=el('g',{class:'av'},gA);
       av.style.transitionDelay=(idx*55)+'ms';
       const link= mm.v?null : mm.fs?('story.html?fs='+mm.fs):('story.html?id='+pad3(mm.i));
       const holder= link?el('a',{href:link},av):el('g',{class:'av-virt'},av);
-      el('clipPath',{id:'cp-'+r.k+idx},av).appendChild(el('circle',{cx:0,cy:0,r:25}));
+      el('clipPath',{id:'cp-'+r.k+idx},av).appendChild(el('circle',{cx:0,cy:0,r:19}));
       const cg=el('g',{transform:`translate(${x},${y})`},holder);
-      el('circle',{class:'av-back',r:29,stroke:fall?'#c9433a':r.c},cg);
+      el('circle',{class:'av-back',r:22,stroke:fall?r.c:'#e8ca7d'},cg);
       if(mm.v){
-        el('text',{class:'virt-glyph',y:9,'font-size':'24'},cg).textContent='虚';
+        el('text',{class:'virt-glyph',y:6.5,'font-size':'18'},cg).textContent='虚';
       }else{
         el('image',{href: mm.fs?('images/fengshen/fs'+pad3(mm.fs)+'.jpg'):('images/ch'+pad3(mm.i)+'.jpg'),
-          x:-25,y:-25,width:50,height:50,'clip-path':`url(#cp-${r.k}${idx})`,preserveAspectRatio:'xMidYMid slice'},cg);
+          x:-19,y:-19,width:38,height:38,'clip-path':`url(#cp-${r.k}${idx})`,preserveAspectRatio:'xMidYMid slice'},cg);
       }
-      el('text',{class:'av-name',x:x,y:y+45},av).textContent=mm.n;
+      el('text',{class:'av-name',x:x,y:y+34},av).textContent=mm.n;
       if(mm.v){
-        el('rect',{class:'av-tag-box',x:x-32,y:y+51,width:64,height:17,rx:8},av);
-        el('text',{class:'av-tag',x:x,y:y+63.5},av).textContent='虚拟人物';
+        el('rect',{class:'av-tag-box',x:x-24,y:y+38,width:48,height:13,rx:6},av);
+        el('text',{class:'av-tag',x:x,y:y+47.5},av).textContent='虚拟人物';
       }
       avEls.push(av);
     });
-    r._show=v=>{lineEls.forEach(l=>l.classList.toggle('on',v));avEls.forEach(a=>a.classList.toggle('on',v));};
+    r._show=v=>{lineEls.forEach(l=>l.classList.toggle('on',v));avEls.forEach(a=>a.classList.toggle('on',v));
+      r._hitEl.classList.toggle('active',v);};
   });
 
   function toggle(r){
