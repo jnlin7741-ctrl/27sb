@@ -108,6 +108,7 @@ svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
     </defs>
     <rect x="0" y="0" width="512" height="512" fill="url(#bgGrad)"/>
     <g id="gTex" pointer-events="none"></g>
+    <g id="gBorder" pointer-events="none"></g>
     <g id="gRegions"></g>
     <g id="gBlk"></g>
     <g id="gDeco" pointer-events="none">
@@ -173,7 +174,7 @@ svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
 <div class="foot">纱布传 · 势力范围一览</div>
 
 <script src="music.js?v=20261020b"></script>
-<script src="map_paths.js?v=20261020c"></script>
+<script src="map_paths.js?v=20261020g"></script>
 <script>
 (function(){
   const NS='http://www.w3.org/2000/svg';
@@ -205,7 +206,7 @@ svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
   const FALL=[
    {k:'fq0',pi:0,c:'#c9433a',a:[89,180],hub:[86,262],cols:1,m:[{n:'黄雨洋',i:22}]},
    {k:'fq1',pi:1,c:'#c9433a',a:[436,158],hub:[468,215],cols:1,m:[{n:'朱镇',fs:1}]},
-   {k:'fq2',pi:2,c:'#c9433a',a:[162,450],hub:[208,470],cols:1,m:[{n:'张钧朝',v:1}]}
+   {k:'fq2',pi:2,c:'#c9433a',a:[164,450],hub:[222,450],cols:1,m:[{n:'张钧朝',v:1}]}
   ];
 
   let active=null;
@@ -330,15 +331,20 @@ svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
   FALL.forEach(f=>{
     const d=TRACE.blk[f.pi];
     el('path',{d,fill:'#000',opacity:.6,filter:'url(#soft)','pointer-events':'none'},gB);
-    const p=el('path',{d,class:'blk',fill:'#0a0a0b',opacity:.94},gB);
+    const p=el('path',{d,class:'blk',fill:'#0a0a0b',opacity:.94,stroke:'#0a0a0b','stroke-width':3},gB);
     p.addEventListener('click',()=>toggle(f));
     const c=centroid(d);
-    const t=el('text',{class:'fall-tag',x:c[0].toFixed(1),y:(c[1]+4.5).toFixed(1)},gB);
+    const t=el('text',{class:'fall-tag',x:c[0].toFixed(1),y:(c[1]+4.5).toFixed(1),'pointer-events':'none'},gB);
     t.textContent='沦陷 ✕';
     f._el=p;
     f._show=v=>{f._lines.forEach(l=>l.classList.toggle('on',v));f._avs.forEach(a=>a.classList.toggle('on',v));
       f._el.classList.toggle('active',v);};
   });
+
+  /* ===== 边疆金垫：暗金底垫块垫在板块之下（填满板块间空隙，外露边缘即金边） ===== */
+  const gBr=document.getElementById('gBorder');
+  el('path',{d:TRACE.outline,fill:'none',stroke:'#9c8a5a','stroke-width':12,opacity:.14,'stroke-linejoin':'round'},gBr);
+  el('path',{d:TRACE.outline,fill:'#ab935e'},gBr);
 
   /* ===== 头像群 ===== */
   REG.concat(FALL).forEach(r=>{
