@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纱布舆图 · 纱布传</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0a06; --paper:#ead9b8; --paper2:#dfcda6; --paper3:#c9b285;
+  --cinn:#b02a1e; --cinn2:#d1452b; --gold:#c9a24b; --gold2:#e8ca7d; --gold3:#8f6f2a;
+  --line:#4a3a20; --sea:#e3d2ac;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0704;color:var(--paper);font-family:'Noto Serif SC',serif;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,.brush{font-family:'Ma Shan Zheng','Noto Serif SC',serif;font-weight:400}
+::selection{background:var(--cinn);color:var(--paper)}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;background:rgba(10,7,4,.88);border-bottom:1px solid rgba(201,162,75,.25);backdrop-filter:blur(6px)}
+.brand{display:flex;align-items:center;gap:12px;font-family:'Ma Shan Zheng';font-size:26px;letter-spacing:.1em;color:var(--paper2)}
+.brand .seal{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--cinn);
+  color:var(--paper);border-radius:6px;font-size:20px;box-shadow:0 2px 10px rgba(176,42,30,.5)}
+.tb-links{display:flex;gap:8px;flex-wrap:wrap}
+.tb-links a{padding:7px 16px;font-size:16px;color:var(--paper2);border:1px solid rgba(201,162,75,.35);border-radius:999px;transition:.3s}
+.tb-links a:hover{color:var(--gold2);border-color:var(--gold2);background:rgba(201,162,75,.1)}
+
+.wrap{max-width:1240px;margin:0 auto;padding:86px 20px 60px}
+.head{text-align:center;margin-bottom:10px}
+.head h1{font-size:clamp(38px,6vw,64px);letter-spacing:.16em;color:var(--paper2);
+  text-shadow:0 0 30px rgba(201,162,75,.25)}
+.head .sub{font-size:15px;color:#a9977a;letter-spacing:.28em;margin-top:6px}
+.hint{text-align:center;font-size:14px;color:#9a8768;letter-spacing:.12em;margin:10px 0 22px}
+.hint b{color:var(--gold2);font-weight:600}
+
+.map-frame{position:relative;border:1px solid rgba(201,162,75,.4);border-radius:10px;background:#100b06;
+  box-shadow:0 24px 80px rgba(0,0,0,.6),inset 0 0 90px rgba(0,0,0,.55);padding:10px}
+.map-frame::before{content:'';position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,162,75,.08),transparent 60%)}
+svg#map{display:block;width:100%;height:auto;touch-action:manipulation}
+
+/* --- 海面波纹 --- */
+.wave{fill:none;stroke:#8a6a2a;stroke-opacity:.18;stroke-width:1.2;stroke-linecap:round}
+/* --- 普通板块 --- */
+.rg{cursor:pointer;transition:filter .35s}
+.rg:hover{filter:brightness(1.18) drop-shadow(0 0 10px rgba(232,202,125,.45))}
+.rg-shape{fill:#d3bd8e;stroke:var(--line);stroke-width:2.4;stroke-linejoin:round}
+.rg-shape.rg-b{fill:#cbB282}
+.rg-shape.rg-c{fill:#d8c49a}
+.rg-name{font-family:'Ma Shan Zheng','Noto Serif SC',serif;fill:#2c1f0e;font-size:30px;letter-spacing:6px;
+  text-anchor:middle;pointer-events:none}
+.rg-sub{font-family:'Noto Serif SC',serif;fill:#5a4828;font-size:11.5px;letter-spacing:2px;text-anchor:middle;pointer-events:none}
+/* --- 沦陷板块 --- */
+.rg-fall{cursor:pointer;transition:filter .35s}
+.rg-fall:hover{filter:brightness(1.5) drop-shadow(0 0 12px rgba(209,69,43,.7))}
+.fs-shape{fill:#3c0f09;stroke:var(--cinn2);stroke-width:2.2;stroke-linejoin:round;stroke-dasharray:7 4}
+.fs-name{font-family:'Ma Shan Zheng','Noto Serif SC',serif;fill:var(--cinn2);font-size:19px;letter-spacing:3px;text-anchor:middle;pointer-events:none}
+.fs-sub{font-family:'Noto Serif SC',serif;fill:#c97a5a;font-size:10.5px;letter-spacing:2px;text-anchor:middle;pointer-events:none}
+/* --- 江河 --- */
+.river{fill:none;stroke:#7d8a86;stroke-opacity:.55;stroke-width:16;stroke-linecap:round}
+.river2{fill:none;stroke:#9aa8a2;stroke-opacity:.35;stroke-width:6;stroke-linecap:round}
+.river-name{font-family:'Ma Shan Zheng';fill:#6f7d78;font-size:16px;letter-spacing:8px;opacity:.8}
+/* --- 罗盘/题字 --- */
+.compass{stroke:#8a6a2a;fill:none;stroke-opacity:.6}
+.compass-t{font-family:'Ma Shan Zheng';fill:#8a6a2a;font-size:14px}
+.cartouche-box{fill:rgba(20,14,7,.65);stroke:var(--gold3);stroke-width:1.4}
+.cartouche-t{font-family:'Ma Shan Zheng';fill:var(--gold2);font-size:34px;letter-spacing:8px}
+.cartouche-s{font-family:'Noto Serif SC',serif;fill:#a9977a;font-size:11px;letter-spacing:3px}
+
+/* --- 人物连线与头像 --- */
+.cl-line{stroke:#6b5426;stroke-width:1.6;stroke-dasharray:5 4;opacity:0;transition:opacity .5s .05s}
+.cl-line.fall{stroke:var(--cinn2)}
+.cl-line.on{opacity:.9}
+.av{opacity:0;transform:translateY(14px);transition:opacity .45s,transform .45s;pointer-events:none}
+.av.on{opacity:1;transform:translateY(0);pointer-events:auto}
+.av a{cursor:pointer}
+.av-ring{fill:#0d0906;stroke:var(--gold3);stroke-width:2.4;transition:stroke .3s,filter .3s}
+.av a:hover .av-ring{stroke:var(--gold2);filter:drop-shadow(0 0 8px rgba(232,202,125,.8))}
+.av-fall .av-ring{stroke:var(--cinn)}
+.av a:hover .av-ring{stroke:var(--cinn2)}
+.av-name{font-family:'Noto Serif SC',serif;font-size:14.5px;fill:var(--paper2);text-anchor:middle;letter-spacing:1px}
+.av-tag{font-family:'Noto Serif SC',serif;font-size:10.5px;fill:#e8b7a8;text-anchor:middle;letter-spacing:1px}
+.av-tag-box{fill:rgba(176,42,30,.22);stroke:var(--cinn);stroke-width:1;rx:8}
+.av-virt{cursor:default}
+
+.foot{text-align:center;padding:26px 0 40px;font-size:13px;color:#7a6a4e;letter-spacing:.2em}
+
+@media (max-width:760px){
+  .topbar{padding:10px 14px}.brand{font-size:20px}.brand .seal{width:30px;height:30px;font-size:16px}
+  .tb-links a{padding:5px 10px;font-size:13px}
+  .rg-name{font-size:22px;letter-spacing:3px}.fs-name{font-size:15px}
+  .cartouche-t{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="seal">纱</span>纱布传</a>
+  <nav class="tb-links">
+    <a href="index.html">首页</a>
+    <a href="gallery.html">名绘</a>
+    <a href="map.html">舆图</a>
+    <a href="gallery.html#fengshen">封神榜</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <h1>纱布舆图</h1>
+    <div class="sub">按院划疆 · 各据一方 · 沦陷之地另立一册</div>
+  </div>
+  <p class="hint">点按<b>各院板块</b>，本部人物即现身于近旁水域并与板块相连；再点<b>人物头像</b>，可翻阅其传。<b style="color:var(--cinn2)">暗红之地</b>为沦陷区。</p>
+
+  <div class="map-frame">
+  <svg id="map" viewBox="0 0 1200 880" role="img" aria-label="纱布舆图">
+    <defs>
+      <pattern id="waves" width="140" height="60" patternUnits="userSpaceOnUse">
+        <path class="wave" d="M8 40c0-7 6-12 13-10 2-6 11-9 17-4 3-5 12-5 15 1"/>
+        <path class="wave" d="M78 22c0-6 5-10 11-8 2-5 9-7 14-3 3-4 10-4 13 1"/>
+        <path class="wave" d="M40 56c0-5 4-9 10-7 2-4 8-6 12-3"/>
+      </pattern>
+      <filter id="soft"><feGaussianBlur stdDeviation="1.1"/></filter>
+      <radialGradient id="paperGlow" cx="50%" cy="42%" r="75%">
+        <stop offset="0%" stop-color="#e8d7ae"/><stop offset="70%" stop-color="#dcc795"/><stop offset="100%" stop-color="#c4ab74"/>
+      </radialGradient>
+    </defs>
+
+    <!-- 海面 -->
+    <rect x="0" y="0" width="1200" height="880" rx="6" fill="url(#paperGlow)"/>
+    <rect x="0" y="0" width="1200" height="880" rx="6" fill="url(#waves)"/>
+    <rect x="8" y="8" width="1184" height="864" rx="4" fill="none" stroke="#8a6a2a" stroke-opacity=".5" stroke-width="1.6"/>
+    <rect x="16" y="16" width="1168" height="848" rx="3" fill="none" stroke="#8a6a2a" stroke-opacity=".3" stroke-width=".8"/>
+
+    <!-- 题签 -->
+    <g>
+      <rect class="cartouche-box" x="52" y="44" width="238" height="96" rx="4"/>
+      <text class="cartouche-t" x="171" y="92" text-anchor="middle">纱布舆图</text>
+      <text class="cartouche-s" x="171" y="120" text-anchor="middle">五院一府 · 三处沦陷</text>
+    </g>
+
+    <!-- 罗盘 -->
+    <g transform="translate(1118,64)" opacity=".85">
+      <circle class="compass" r="34"/><circle class="compass" r="26" stroke-dasharray="3 4"/>
+      <path class="compass" d="M0,-30 L7,0 L0,30 L-7,0 Z" fill="#8a6a2a" fill-opacity=".55"/>
+      <text class="compass-t" y="-40" text-anchor="middle">北</text>
+    </g>
+
+    <!-- 赣江 -->
+    <path class="river"  d="M320,668 C420,640 520,700 640,672"/>
+    <path class="river2" d="M320,668 C420,640 520,700 640,672"/>
+    <text class="river-name" x="470" y="655">赣 江</text>
+
+    <!-- 板块由脚本生成 -->
+    <g id="gRegions"></g>
+    <g id="gLines"></g>
+    <g id="gAvatars"></g>
+  </svg>
+  </div>
+</div>
+
+<div class="foot">纱布传 · 舆图一卷</div>
+
+<script src="music.js?v=20261019a"></script>
+<script>
+(function(){
+  /* ===== 数据：成员 [姓名, data.js 座次(1起)]；沦陷区另记 ===== */
+  const REG=[
+   {k:'xinyuan',n:'信院',sub:'天罡三雄驻节之地',cls:'rg-shape',
+    pts:'540,112 656,94 722,138 704,202 612,218 546,178',
+    a:[566,132],hub:[452,82],grid:3,
+    m:[['陈昭康',2],['黄伟明',8],['肖祝捷',16]]},
+   {k:'jd',n:'机电院',sub:'机枢之地 · 人马最众',cls:'rg-shape rg-b',
+    pts:'770,242 900,226 992,292 962,382 842,402 766,332',
+    a:[790,300],hub:[1052,432],grid:3,
+    m:[['许醇杰',1],['林建辉',9],['杨建勇',10],['刘舒帆',14],['解勇',17],['高宇轩',24],['梁克楠',25]]},
+   {k:'dq',n:'电气院',sub:'天下膏腴 · 十一人之地',cls:'rg-shape rg-c',
+    pts:'300,262 470,246 572,286 586,392 502,472 362,482 286,402',
+    a:[300,340],hub:[152,332],grid:3,
+    m:[['陈璇',4],['曾志强',5],['刘正文',6],['朱宇辰',7],['吕科榕',12],['徐嘉伟',15],['涂宏宸',18],['钟俊文',19],['叶凯斌',20],['董毅',21],['余宣亮',23]]},
+   {k:'tc',n:'土测院',sub:'测绘山川',cls:'rg-shape',
+    pts:'242,542 342,526 376,592 332,652 242,642 206,586',
+    a:[240,600],hub:[152,726],grid:4,
+    m:[['代小川',11]]},
+   {k:'fx',n:'法学院',sub:'执律之地',cls:'rg-shape rg-b',
+    pts:'642,542 762,526 802,602 732,662 646,642 616,582',
+    a:[676,630],hub:[898,722],grid:4,
+    m:[['贺书文',13],['应奇都',26]]},
+   {k:'nc',n:'南昌府',sub:'隔江而治',cls:'rg-shape rg-c',
+    pts:'420,692 542,676 592,736 546,792 432,796 386,742',
+    a:[420,740],hub:[300,824],grid:4,
+    m:[['温伟斌',3],['黄祚京',27]]},
+   /* —— 沦陷区（单独板块） —— */
+   {k:'fq_dq',n:'电气院沦陷区',sub:'陷 · 黄雨洋踞此',fall:1,
+    pts:'600,236 686,220 716,272 670,306 602,292',
+    a:[604,262],hub:[818,132],grid:4,
+    m:[{n:'黄雨洋',i:22}]},
+   {k:'fq_jd',n:'机电院沦陷区',sub:'陷 · 朱镇踞此',fall:1,
+    pts:'1040,166 1130,152 1162,212 1112,252 1046,236',
+    a:[1052,240],hub:[1108,338],grid:4,
+    m:[{n:'朱镇',fs:1}]},
+   {k:'fq_nc',n:'南昌沦陷区',sub:'陷 · 张钧朝踞此',fall:1,
+    pts:'660,706 752,690 786,746 736,796 662,782',
+    a:[720,742],hub:[962,806],grid:4,
+    m:[{n:'张钧朝',v:1}]}
+  ];
+
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,at,parent)=>{const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);if(parent)parent.appendChild(e);return e;};
+  const pad3=i=>String(i).padStart(3,'0');
+  const gR=document.getElementById('gRegions'),gL=document.getElementById('gLines'),gA=document.getElementById('gAvatars');
+  let active=null;
+
+  REG.forEach(r=>{
+    const fall=!!r.fall;
+    /* 板块 */
+    const g=el('g',{class:fall?'rg-fall':'rg'},gR);
+    const poly=el('polygon',{class:fall?'fs-shape':r.cls,points:r.pts},g);
+    if(fall)poly.setAttribute('filter','url(#soft)');
+    const cx=(()=>{const p=r.pts.split(' ').map(s=>s.split(',').map(Number));let x=0,y=0;p.forEach(q=>{x+=q[0];y+=q[1]});return[x/p.length,y/p.length];})();
+    el('text',{class:fall?'fs-name':'rg-name',x:cx[0],y:cx[1]+(fall?2:4)},g).textContent=r.n;
+    el('text',{class:fall?'fs-sub':'rg-sub',x:cx[0],y:cx[1]+(fall?20:28)},g).textContent=r.sub;
+    g.addEventListener('click',()=>toggle(r));
+
+    /* 头像群 */
+    const n=r.m.length,cols=Math.min(r.grid||4,n),rows=Math.ceil(n/cols),SP=74;
+    const lineEls=[],avEls=[];
+    r.m.forEach((m0,idx)=>{
+      const mm=Array.isArray(m0)?{n:m0[0],i:m0[1]}:m0;
+      const ci=idx%cols,ri=Math.floor(idx/cols);
+      const x=r.hub[0]+(ci-(cols-1)/2)*SP, y=r.hub[1]+(ri-(rows-1)/2)*SP;
+      lineEls.push(el('line',{class:'cl-line'+(fall?' fall':''),x1:r.a[0],y1:r.a[1],x2:x,y2:y-6},gL));
+
+      const av=el('g',{class:'av'+(fall?' av-fall':'')},gA);
+      av.style.transitionDelay=(idx*60)+'ms';
+      const virt=mm.v;
+      const link= virt?null : mm.fs?('story.html?fs='+mm.fs):('story.html?id='+pad3(mm.i));
+      const holder= link?el('a',{href:link},av):el('g',{class:'av-virt'},av);
+      el('clipPath',{id:'cp-'+r.k+idx},av).appendChild(el('circle',{cx:0,cy:0,r:27}));
+      const cg=el('g',{transform:`translate(${x},${y})`},holder);
+      if(virt){
+        el('circle',{class:'av-ring',r:27},cg);
+        el('text',{y:9,'text-anchor':'middle','font-family':'Ma Shan Zheng','font-size':'26',fill:'#c9b285'},cg).textContent='虚';
+      }else{
+        el('circle',{class:'av-ring',r:29},cg);
+        el('image',{href: mm.fs?('images/fengshen/fs'+pad3(mm.fs)+'.jpg'):('images/ch'+pad3(mm.i)+'.jpg'),
+          x:-27,y:-27,width:54,height:54,'clip-path':`url(#cp-${r.k}${idx})`,preserveAspectRatio:'xMidYMid slice'},cg);
+      }
+      el('text',{class:'av-name',x:x,y:y+46},av).textContent=mm.n;
+      if(virt){
+        el('rect',{class:'av-tag-box',x:x-32,y:y+52,width:64,height:17,rx:8},av);
+        el('text',{class:'av-tag',x:x,y:y+64.5},av).textContent='虚拟人物';
+      }else if(fall){
+        el('rect',{class:'av-tag-box',x:x-32,y:y+52,width:64,height:17,rx:8},av);
+        el('text',{class:'av-tag',x:x,y:y+64.5},av).textContent='沦陷之人';
+      }
+      avEls.push(av);
+    });
+
+    r._show=v=>{lineEls.forEach(l=>l.classList.toggle('on',v));avEls.forEach(a=>a.classList.toggle('on',v));};
+  });
+
+  function toggle(r){
+    const v=active!==r;
+    if(active)active._show(false);
+    active=v?r:null;
+    r._show(v);
+  }
+})();
+</script>
+</body>
+</html>
