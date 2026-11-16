@@ -90,6 +90,15 @@ section{position:relative}
 .gal-card.fs:hover .gal-img img{filter:saturate(1)}
 #fsIntro{max-width:760px;margin:12px auto 0;line-height:1.9}
 
+/* 论战备注 */
+#lunzhan{padding:110px 0 130px;background:linear-gradient(180deg,rgba(14,10,6,.78),rgba(29,19,10,.5) 40%,rgba(14,10,6,.8))}
+.lz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:22px}
+.lz-item{background:rgba(23,16,9,.62);border:1px solid rgba(201,162,75,.28);border-radius:3px;padding:22px 24px;transition:border-color .35s,transform .35s}
+.lz-item:hover{border-color:var(--gold);transform:translateY(-3px)}
+.lz-item h3{margin:0 0 10px;font-size:20px;color:var(--gold2);letter-spacing:.12em;font-weight:400}
+.lz-item p{margin:0;font-size:18px;line-height:1.95;color:var(--paper2)}
+.lz-no{display:inline-block;margin-right:8px;color:#d1452b;font-size:17px;letter-spacing:.1em}
+
 /* 人物小卡片弹窗 */
 .modal-mask{position:fixed;inset:0;z-index:400;background:rgba(6,4,2,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:26px;opacity:0;pointer-events:none;transition:opacity .35s var(--ease-soft)}
 .modal-mask.show{opacity:1;pointer-events:auto}
@@ -278,6 +287,18 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
   </div>
 </section>
 
+<!-- 论战备注 -->
+<section id="lunzhan">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-kicker">论 战 之 余</div>
+      <h2 class="sec-title">论战备注</h2>
+      <div class="sec-sub" id="lzIntro"></div>
+    </div>
+    <div class="lz-grid reveal" id="lzGrid"></div>
+  </div>
+</section>
+
 <!-- 人物小卡片弹窗 -->
 <div class="modal-mask" id="modalMask">
   <div class="modal">
@@ -403,6 +424,16 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
     <div class="gal-open">展 传</div>`;
     c.onclick=()=>{location.href='story.html?fs='+String(i+1).padStart(3,'0')+'&from=fengshen';};
     fg.appendChild(c);
+  });
+
+  /* 论战备注 */
+  const LZ=window.TIER_NOTES||[];
+  document.getElementById('lzIntro').textContent=window.TIER_INTRO||'';
+  const lg=document.getElementById('lzGrid');
+  LZ.forEach((o,i)=>{
+    const d=document.createElement('div');d.className='lz-item';
+    d.innerHTML='<h3><span class="lz-no">'+String(i+1).padStart(2,'0')+'</span>'+o.h+'</h3><p>'+o.s+'</p>';
+    lg.appendChild(d);
   });
 })();
 </script>
