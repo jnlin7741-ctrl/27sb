@@ -99,6 +99,18 @@ section{position:relative}
 .lz-item p{margin:0;font-size:18px;line-height:1.95;color:var(--paper2)}
 .lz-no{display:inline-block;margin-right:8px;color:#d1452b;font-size:17px;letter-spacing:.1em}
 
+/* 论战实录 */
+#duels{padding:100px 0 120px;background:linear-gradient(180deg,rgba(14,10,6,.7),rgba(20,14,8,.55))}
+.duel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px}
+.duel{background:rgba(23,16,9,.6);border:1px solid rgba(201,162,75,.24);border-radius:3px;padding:18px 22px;transition:border-color .35s,transform .35s}
+.duel:hover{border-color:rgba(201,162,75,.6);transform:translateY(-3px)}
+.duel-top{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;font-size:19px;color:var(--paper)}
+.duel-top b{font-weight:400;color:var(--gold2);letter-spacing:.08em}
+.duel-no{color:#d1452b;font-size:16px;letter-spacing:.1em}
+.duel-top .vs{color:#d1452b;font-size:17px}
+.duel-top .res{margin-left:auto;font-size:16px;color:var(--paper3);letter-spacing:.06em;white-space:nowrap}
+.duel p{margin:0;font-size:17px;line-height:1.9;color:var(--paper3)}
+
 /* 人物小卡片弹窗 */
 .modal-mask{position:fixed;inset:0;z-index:400;background:rgba(6,4,2,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:26px;opacity:0;pointer-events:none;transition:opacity .35s var(--ease-soft)}
 .modal-mask.show{opacity:1;pointer-events:auto}
@@ -299,6 +311,18 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
   </div>
 </section>
 
+<!-- 论战实录 -->
+<section id="duels">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-kicker">论 战 实 录</div>
+      <h2 class="sec-title">二十七场</h2>
+      <div class="sec-sub" id="duelIntro"></div>
+    </div>
+    <div class="duel-grid reveal" id="duelGrid"></div>
+  </div>
+</section>
+
 <!-- 人物小卡片弹窗 -->
 <div class="modal-mask" id="modalMask">
   <div class="modal">
@@ -434,6 +458,16 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
     const d=document.createElement('div');d.className='lz-item';
     d.innerHTML='<h3><span class="lz-no">'+String(i+1).padStart(2,'0')+'</span>'+o.h+'</h3><p>'+o.s+'</p>';
     lg.appendChild(d);
+  });
+
+  /* 论战实录 */
+  const DL=window.DUELS||[];
+  document.getElementById('duelIntro').textContent=window.DUEL_INTRO||'';
+  const dg=document.getElementById('duelGrid');
+  DL.forEach((o,i)=>{
+    const d=document.createElement('div');d.className='duel';
+    d.innerHTML='<div class="duel-top"><span class="duel-no">'+String(i+1).padStart(2,'0')+'</span><b>'+o.a+'</b><span class="vs">对</span><b>'+o.b+'</b><span class="res">'+o.r+' · '+o.v+'</span></div><p>'+o.n+'</p>';
+    dg.appendChild(d);
   });
 })();
 </script>
