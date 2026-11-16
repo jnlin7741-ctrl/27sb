@@ -74,6 +74,7 @@ section{position:relative}
 .gal-star{font-size:18px;color:var(--gold);letter-spacing:.3em}
 .gal-name{font-family:'Ma Shan Zheng';font-size:35px;color:#f3e7c9;margin:2px 0}
 .gal-nick{font-size:18px;color:var(--ash);letter-spacing:.15em}
+.gal-tier{display:inline-block;margin:0 0 6px;padding:2px 10px;font-size:16px;letter-spacing:.12em;color:#f3d9c8;background:rgba(20,13,6,.82);border:1px solid rgba(201,162,75,.55);border-radius:3px}
 .gal-open{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);z-index:4;padding:10px 22px;background:rgba(176,42,30,.92);color:#f7ecd4;font-size:18px;letter-spacing:.2em;text-indent:.2em;border-radius:3px;opacity:0;transition:opacity .35s,transform .35s;pointer-events:none}
 .gal-card:hover .gal-open{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .gal-story{position:absolute;left:10px;top:10px;z-index:4;padding:6px 12px;font-size:18px;letter-spacing:.14em;text-indent:.14em;
@@ -103,6 +104,8 @@ section{position:relative}
 .modal-name{font-family:'Ma Shan Zheng';font-size:46px;color:#241704;line-height:1.1}
 .modal-nick{font-size:20px;color:#7a5a2a;margin:6px 0 22px;letter-spacing:.2em}
 .modal-story{font-size:18px;line-height:2.15;color:#3d2c14;text-align:justify}
+.modal-tier{margin-top:22px;padding:12px 16px;border-left:3px solid #b08a3c;background:rgba(201,162,75,.14);font-size:17px;line-height:1.85;color:#4a3416}
+.modal-tier b{display:block;font-size:19px;color:#8a3d12;letter-spacing:.12em;margin-bottom:4px}
 .modal-fate{margin-top:26px;display:inline-block;padding:8px 18px;font-size:18px;letter-spacing:.2em;border:1px solid;border-radius:3px}
 .fate-0{color:#5c6b3f;border-color:#8b9a5e;background:rgba(139,154,94,.12)}
 .fate-1{color:#a02615;border-color:#c25b46;background:rgba(176,42,30,.1)}
@@ -253,6 +256,10 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
       <button class="chip" data-f="f0">活跃中</button>
       <button class="chip" data-f="f1">已毕业</button>
       <button class="chip" data-f="f2">长期潜水</button>
+      <button class="chip" data-f="k:龙">龙档 · 1</button>
+      <button class="chip" data-f="k:虎">虎档 · 5</button>
+      <button class="chip" data-f="k:骠">骠档 · 14</button>
+      <button class="chip" data-f="k:彪">彪档 · 7</button>
     </div>
     <div class="gal-grid reveal" id="galGrid"></div>
     <div class="gal-none" id="galNone">没有找到这位好汉 —— 换个叫法试试？</div>
@@ -285,6 +292,7 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
       <div class="modal-name" id="modalName"></div>
       <div class="modal-nick" id="modalNick"></div>
       <div class="modal-story" id="modalStory"></div>
+      <div class="modal-tier" id="modalTier"></div>
       <div class="modal-fate" id="modalFate"></div>
       <a class="modal-more" id="modalMore" href="#">进入他的独立页 →</a>
     </div>
@@ -312,6 +320,11 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
       if(f==='f0'&&h.f!==0)return;
       if(f==='f1'&&h.f!==1)return;
       if(f==='f2'&&h.f!==2)return;
+      if(f.indexOf('k:')===0){
+        const t=h.tier||'';
+        const k=t==='龙'?'龙':t.indexOf('虎')>=0?'虎':t.indexOf('骠')>=0?'骠':t.indexOf('彪')>=0?'彪':'无';
+        if(k!==f.slice(2))return;
+      }
       if(q){
         const seat=String(i+1),seat3=seat.padStart(3,'0');
         const hay=h.n+' '+h.nick+' '+h.x+' '+seat+' '+seat3;
@@ -322,7 +335,7 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
       c.innerHTML=`<div class="gal-img"><img loading="lazy" src="${P(i)}" alt="${h.n}"></div>
       ${h.f?`<div class="gal-fate">${FT[h.f]}</div>`:''}
       <a class="gal-story" href="story.html?id=${String(i+1).padStart(3,'0')}&from=gallery">他的故事</a>
-      <div class="gal-meta"><div class="gal-star">${h.x}</div><div class="gal-name">${h.n}</div><div class="gal-nick">${h.nick}</div></div>
+      <div class="gal-meta"><div class="gal-tier">${h.tier||''}</div><div class="gal-star">${h.x}</div><div class="gal-name">${h.n}</div><div class="gal-nick">${h.nick}</div></div>
       <div class="gal-open">展 传</div>`;
       c.querySelector('.gal-story').onclick=e=>{e.stopPropagation();try{sessionStorage.setItem('jssh_gal_y',String(Math.round(scrollY)));}catch(_){}};
       c.onclick=()=>openModal(i);
@@ -351,6 +364,9 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
     document.getElementById('modalName').textContent=h.n;
     document.getElementById('modalNick').textContent=`称号 · ${h.nick}`;
     document.getElementById('modalStory').textContent=h.s;
+    const mt=document.getElementById('modalTier');
+    mt.style.display=h.tier?'block':'none';
+    mt.innerHTML=h.tier?('<b>论战定位 · '+h.tier+'</b><span>依据 · '+(h.why||'')+'</span>'):'';
     const ft=document.getElementById('modalFate');
     ft.className='modal-fate fate-'+h.f;ft.textContent=FT[h.f];
     document.getElementById('modalMore').href='story.html?id='+String(cur+1).padStart(3,'0')+'&from=gallery';
@@ -383,7 +399,7 @@ input[type=text],input[type=search],textarea{cursor:url("data:image/svg+xml,%3Cs
     const c=document.createElement('div');c.className='gal-card fs';
     c.innerHTML=`<div class="gal-img"><img loading="lazy" src="${PF(i)}" alt="${h.n}"></div>
     <div class="fs-dead">殁 · ${h.by}</div>
-    <div class="gal-meta"><div class="gal-star">${h.x}</div><div class="gal-name">${h.n}</div><div class="gal-nick">封神榜 · 第 ${i+1} 位</div></div>
+    <div class="gal-meta"><div class="gal-tier">${h.tier||''}</div><div class="gal-star">${h.x}</div><div class="gal-name">${h.n}</div><div class="gal-nick">封神榜 · 第 ${i+1} 位</div></div>
     <div class="gal-open">展 传</div>`;
     c.onclick=()=>{location.href='story.html?fs='+String(i+1).padStart(3,'0')+'&from=fengshen';};
     fg.appendChild(c);
